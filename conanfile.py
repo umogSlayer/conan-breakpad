@@ -3,12 +3,12 @@ import os, shutil
 
 class BreakpadConan( ConanFile ):
   name = 'breakpad'
-  version = '1.0.0'
+  branch = 'chrome_90'
+  version = '0.1.' + branch
   license = 'https://chromium.googlesource.com/breakpad/breakpad/+/master/LICENSE'
   url = 'https://github.com/shinichy/conan-breakpad'
   settings = 'os', 'compiler', 'build_type', 'arch'
   generators = 'cmake'
-  branch = 'chrome_58'
   exports = ["FindBREAKPAD.cmake", "patch/*"]
 
   def source( self ):
@@ -35,7 +35,8 @@ class BreakpadConan( ConanFile ):
 
   def package( self ):
     self.copy("FindBREAKPAD.cmake", ".", ".")
-    self.copy( '*.h', dst='include/common', src='breakpad/src/common' )
+    if self.settings.os != 'Linux':
+      self.copy( '*.h', dst='include/common', src='breakpad/src/common' )
 
     if self.settings.os == 'Macos':
       self.copy( '*.h', dst='include/client/mac', src='breakpad/src/client/mac' )
@@ -50,19 +51,8 @@ class BreakpadConan( ConanFile ):
       self.copy( '*.lib', dst='lib', src='breakpad/src/client/windows/sender/%s' % self.settings.build_type, keep_path=False )
       self.copy( '*.exe', dst='bin', src='breakpad/src/tools/windows/binaries' )
     elif self.settings.os == 'Linux':
-      self.copy("*.h", dst="include/client/linux", src="breakpad/src/client/linux")
-      self.copy("*.h", dst="include/google_breakpad/", src="breakpad/src/google_breakpad")
-      self.copy("*.h", dst="include/third_party/", src="breakpad/src/third_party")
-      self.copy("*.a", dst="lib", src="src/client/linux")
-      self.copy("microdump_stackwalk", dst="bin", src="src/processor/")
-      self.copy("minidump_dump", dst="bin", src="src/processor/")
-      self.copy("minidump_stackwalk", dst="bin", src="src/processor/")
-      self.copy("dump_syms", dst="bin", src="src/tools/linux/dump_syms/")
-      self.copy("core2md", dst="bin", src="src/tools/linux/core2md/")
-      self.copy("minidump-2-core", dst="bin", src="src/tools/linux/md2core/")
-      self.copy("minidump_upload", dst="bin", src="src/tools/linux/symupload/")
-      self.copy("sym_upload", dst="bin", src="src/tools/linux/symupload/")
-
+      env_build = AutoToolsBuildEnvironment(self)
+      env_build.install()
 
   def package_info( self ):
     if self.settings.os == 'Windows':
