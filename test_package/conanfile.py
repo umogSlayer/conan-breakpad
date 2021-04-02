@@ -1,12 +1,12 @@
 from conans import ConanFile, CMake
 import os
 
-username = os.getenv( '"CONAN_USERNAME', 'shinichy' )
+username = os.getenv( '"CONAN_USERNAME', 'slayer' )
 channel = os.getenv( 'CONAN_CHANNEL', 'testing' )
 
 class TestConan( ConanFile ):
   settings = 'os', 'compiler', 'build_type', 'arch'
-  requires = 'breakpad/1.0.0@%s/%s' %  (username, channel )
+  requires = 'breakpad/0.1.chrome_90@%s/%s' %  (username, channel )
   generators = 'cmake'
 
   def build( self ):
