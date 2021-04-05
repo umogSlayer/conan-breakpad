@@ -10,7 +10,7 @@
 #=============================================================================
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
-if (LINUX)
+if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     find_library(BREAKPAD_COMMON NAMES breakpad PATHS ${CONAN_LIB_DIRS_BREAKPAD})
     find_library(BREAKPAD_CLIENT NAMES breakpad_client PATHS ${CONAN_LIB_DIRS_BREAKPAD})
 else ()
@@ -32,7 +32,7 @@ MESSAGE("** FOUND BREAKPAD LIBRARIES:"
     " ${BREAKPAD_CLIENT}")
 
 set(BREAKPAD_INCLUDE_DIRS ${CONAN_INCLUDE_DIRS_BREAKPAD} ${CONAN_INCLUDE_DIRS_BREAKPAD}/breakpad)
-if (LINUX)
+if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     set(BREAKPAD_LIBRARIES ${BREAKPAD_COMMON} ${BREAKPAD_CLIENT})
     mark_as_advanced(BREAKPAD_COMMON BREAKPAD_CLIENT)
 else ()
