@@ -24,6 +24,7 @@ class BreakpadConan( ConanFile ):
 
   def build( self ):
     if self.settings.os == 'Macos':
+      tools.patch(base_path='breakpad', patch_file='patch/Breakpad.xcodeproj.patch')
       arch = 'i386' if self.settings.arch == 'x86' else self.settings.arch
       self.run( 'xcodebuild -project breakpad/src/client/mac/Breakpad.xcodeproj -sdk macosx -target Breakpad ARCHS=%s ONLY_ACTIVE_ARCH=YES -configuration %s' % (arch, self.settings.build_type) )
     elif self.settings.os == 'Windows':

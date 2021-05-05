@@ -1,0 +1,40 @@
+diff --git a/src/client/mac/Breakpad.xcodeproj/project.pbxproj b/src/client/mac/Breakpad.xcodeproj/project.pbxproj
+index 1087653..e53a268 100644
+--- a/src/client/mac/Breakpad.xcodeproj/project.pbxproj
++++ b/src/client/mac/Breakpad.xcodeproj/project.pbxproj
+@@ -81,6 +81,8 @@
+ 		8B3102EB11F0D78000FCF3E4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
+ 		8B31FC8211EFD2B800FCF3E4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
+ 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
++		B88A324B26428314003AB6EE /* HTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B88A323D26428314003AB6EE /* HTTPRequest.m */; };
++		B88A32592642832A003AB6EE /* encoding_util.m in Sources */ = {isa = PBXBuildFile; fileRef = B88A32582642832A003AB6EE /* encoding_util.m */; };
+ 		D23F4B2E12A7E13200686C8D /* minidump_generator_test.cc in Sources */ = {isa = PBXBuildFile; fileRef = D23F4B2C12A7E13200686C8D /* minidump_generator_test.cc */; };
+ 		D23F4B3312A7E17700686C8D /* libgtest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F9A41512131EF0002747C1 /* libgtest.a */; };
+ 		D23F4BB112A868CB00686C8D /* minidump_generator_test_helper.cc in Sources */ = {isa = PBXBuildFile; fileRef = D23F4B9A12A8688800686C8D /* minidump_generator_test_helper.cc */; };
+@@ -592,6 +594,8 @@
+ 		8B31027811F0D3AF00FCF3E4 /* BreakpadRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = BreakpadRelease.xcconfig; path = ../../common/mac/BreakpadRelease.xcconfig; sourceTree = SOURCE_ROOT; };
+ 		8B31FFF611F0C90500FCF3E4 /* Breakpad.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Breakpad.xcconfig; path = ../../common/mac/Breakpad.xcconfig; sourceTree = SOURCE_ROOT; };
+ 		8DC2EF5B0486A6940098B216 /* Breakpad.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Breakpad.framework; sourceTree = BUILT_PRODUCTS_DIR; };
++		B88A323D26428314003AB6EE /* HTTPRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HTTPRequest.m; path = ../../common/mac/HTTPRequest.m; sourceTree = "<group>"; };
++		B88A32582642832A003AB6EE /* encoding_util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = encoding_util.m; path = ../../common/mac/encoding_util.m; sourceTree = "<group>"; };
+ 		D23F4B2C12A7E13200686C8D /* minidump_generator_test.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = minidump_generator_test.cc; path = tests/minidump_generator_test.cc; sourceTree = "<group>"; };
+ 		D23F4B9A12A8688800686C8D /* minidump_generator_test_helper.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = minidump_generator_test_helper.cc; path = tests/minidump_generator_test_helper.cc; sourceTree = "<group>"; };
+ 		D23F4BAB12A868A500686C8D /* minidump_generator_test_helper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = minidump_generator_test_helper; sourceTree = BUILT_PRODUCTS_DIR; };
+@@ -851,6 +855,8 @@
+ 		0867D691FE84028FC02AAC07 /* Breakpad */ = {
+ 			isa = PBXGroup;
+ 			children = (
++				B88A32582642832A003AB6EE /* encoding_util.m */,
++				B88A323D26428314003AB6EE /* HTTPRequest.m */,
+ 				D2F9A43812131F3B002747C1 /* gtest */,
+ 				8B31FFF611F0C90500FCF3E4 /* Breakpad.xcconfig */,
+ 				8B31027711F0D3AF00FCF3E4 /* BreakpadDebug.xcconfig */,
+@@ -1800,6 +1806,8 @@
+ 			isa = PBXSourcesBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
++				B88A32592642832A003AB6EE /* encoding_util.m in Sources */,
++				B88A324B26428314003AB6EE /* HTTPRequest.m in Sources */,
+ 				F9C44EA20EF09F93003AEBAA /* HTTPMultipartUpload.m in Sources */,
+ 				F92C56A90ECE04C5009BE4BA /* crash_report_sender.m in Sources */,
+ 				F9C44EE90EF0A3C1003AEBAA /* GTMLogger.m in Sources */,
