@@ -22,11 +22,30 @@ class BreakpadConan( ConanFile ):
       gyp_git = tools.Git(folder='breakpad/src/tools/gyp')
       gyp_git.clone('https://github.com/umogSlayer/gyp-clone.git')
 
+  def _macosx_build_commandline(self, project, target, build_type, build_settings):
+    build_settings_string = ' '.join(key + '=' + value for key, value in build_settings.items())
+    return 'xcodebuild -project {project} -sdk macosx -target {target} -configuration {build_type} {build_settings}' \
+      .format(project=project,
+              target=target,
+              build_type=build_type,
+              build_settings=build_settings_string)
+
   def build( self ):
     if self.settings.os == 'Macos':
       tools.patch(base_path='breakpad', patch_file='patch/Breakpad.xcodeproj.patch')
-      arch = 'i386' if self.settings.arch == 'x86' else self.settings.arch
-      self.run( 'xcodebuild -project breakpad/src/client/mac/Breakpad.xcodeproj -sdk macosx -target Breakpad ARCHS=%s ONLY_ACTIVE_ARCH=YES -configuration %s' % (arch, self.settings.build_type) )
+      arch = 'i386' if self.settings.arch == 'x86' \
+             else 'arm64' if self.settings.arch == 'armv8' \
+             else self.settings.arch
+      build_settings = {
+        'ARCHS': str(arch),
+        'ONLY_ACTIVE_ARCH': 'YES',
+        'MACOSX_DEPLOYMENT_TARGET': str(self.settings.os.get_safe('version', '10.15')),
+      }
+      command_line = self._macosx_build_commandline('breakpad/src/client/mac/Breakpad.xcodeproj',
+                                                    'Breakpad',
+                                                    self.settings.build_type,
+                                                    build_settings)
+      self.run(command_line)
     elif self.settings.os == 'Windows':
       tools.patch(base_path='breakpad', patch_file='patch/common.gypi.patch')
       os.environ['GYP_MSVS_VERSION'] = '2019'
@@ -48,7 +67,7 @@ class BreakpadConan( ConanFile ):
       self.copy( '*.h', dst='include/common', src='breakpad/src/common' )
 
     if self.settings.os == 'Macos':
-      self.copy( '*.h', dst='include/client/mac', src='breakpad/src/client/mac' )
+      self.copy( '*.h', dst='include/breakpad/client/mac', src='breakpad/src/client/mac' )
       # self.copy doesn't preserve symbolic links
       shutil.copytree('breakpad/src/client/mac/build/%s/Breakpad.framework' % self.settings.build_type, os.path.join(self.package_folder, 'lib', 'Breakpad.framework'), symlinks=True)
     elif self.settings.os == 'Windows':
@@ -66,6 +85,6 @@ class BreakpadConan( ConanFile ):
   def package_info( self ):
     if self.settings.os == 'Windows':
       self.cpp_info.libs = ['breakpad']
-    if self.settings.os == 'Linux':
+    if self.settings.os == 'Linux' or self.settings.os == 'Macos':
       self.cpp_info.includedirs.append('include/breakpad')
     self.env_info.path.append(os.path.join(self.package_folder, "bin"))
