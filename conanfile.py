@@ -23,7 +23,7 @@ class BreakpadConan( ConanFile ):
       gyp_git.clone('https://github.com/umogSlayer/gyp-clone.git')
 
   def _macosx_build_commandline(self, project, target, build_type, build_settings):
-    build_settings_string = ' '.join(key + '=' + value for key, value in build_settings.items())
+    build_settings_string = ' '.join(key + '="' + value + '"' for key, value in build_settings.items())
     return 'xcodebuild -project {project} -sdk macosx -target {target} -configuration {build_type} {build_settings}' \
       .format(project=project,
               target=target,
@@ -35,6 +35,7 @@ class BreakpadConan( ConanFile ):
       tools.patch(base_path='breakpad', patch_file='patch/Breakpad.xcodeproj.patch')
       arch = 'i386' if self.settings.arch == 'x86' \
              else 'arm64' if self.settings.arch == 'armv8' \
+             else 'arm64e' if self.settings.arch == 'armv8.3' \
              else self.settings.arch
       build_settings = {
         'ARCHS': str(arch),
