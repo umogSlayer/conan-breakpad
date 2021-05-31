@@ -11,6 +11,7 @@ class BreakpadConan( ConanFile ):
   settings = 'os', 'compiler', 'build_type', 'arch'
   generators = 'cmake'
   exports = ["FindBREAKPAD.cmake", "patch/*"]
+  short_paths = True
 
   def source( self ):
     breakpad_git = tools.Git(folder='breakpad')
