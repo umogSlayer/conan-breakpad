@@ -1,0 +1,12 @@
+diff -Naurd breakpad.bak/src/client/linux/handler/exception_handler.cc breakpad/src/client/linux/handler/exception_handler.cc
+--- breakpad.bak/src/client/linux/handler/exception_handler.cc	2021-10-11 17:43:08.412794334 +0700
++++ breakpad/src/client/linux/handler/exception_handler.cc	2021-10-11 17:43:17.192732000 +0700
+@@ -138,7 +138,7 @@
+   // SIGSTKSZ may be too small to prevent the signal handlers from overrunning
+   // the alternative stack. Ensure that the size of the alternative stack is
+   // large enough.
+-  static const unsigned kSigStackSize = std::max(16384, SIGSTKSZ);
++  static const unsigned kSigStackSize = std::max<long>(16384, SIGSTKSZ);
+ 
+   // Only set an alternative stack if there isn't already one, or if the current
+   // one is too small.

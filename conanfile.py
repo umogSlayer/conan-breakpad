@@ -59,6 +59,7 @@ class BreakpadConan( ConanFile ):
       msbuild.build('breakpad/src/client/windows/crash_generation/crash_generation_server.vcxproj', upgrade_project=False)
       msbuild.build('breakpad/src/client/windows/sender/crash_report_sender.vcxproj', upgrade_project=False)
     elif self.settings.os == 'Linux':
+      tools.patch(base_path='breakpad', patch_file='patch/std-max.patch', strip=1)
       env_build = AutoToolsBuildEnvironment(self)
       env_build.configure('breakpad/')
       env_build.make()
