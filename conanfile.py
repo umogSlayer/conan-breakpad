@@ -10,7 +10,7 @@ class BreakpadConan( ConanFile ):
   url = 'https://github.com/shinichy/conan-breakpad'
   settings = 'os', 'compiler', 'build_type', 'arch'
   generators = 'cmake'
-  exports = ["FindBREAKPAD.cmake", "patch/*"]
+  exports = ["patch/*"]
   short_paths = True
 
   def source( self ):
@@ -65,7 +65,6 @@ class BreakpadConan( ConanFile ):
       env_build.make()
 
   def package( self ):
-    self.copy("FindBREAKPAD.cmake", ".", ".")
     if self.settings.os != 'Linux':
       self.copy( '*.h', dst='include/common', src='breakpad/src/common' )
 
@@ -87,7 +86,17 @@ class BreakpadConan( ConanFile ):
 
   def package_info( self ):
     if self.settings.os == 'Windows':
-      self.cpp_info.libs = ['breakpad']
+      self.cpp_info.libs = [
+        'common',
+        'exception_handler',
+        'crash_generation_client',
+        'crash_generation_server',
+        'crash_report_sender',
+      ]
+    if self.settings.os == 'Linux':
+      self.cpp_info.libs = ['breakpad', 'breakpad_client']
+    if self.settings.os == 'Macos':
+      self.cpp_info.frameworks = ['Breakpad']
     if self.settings.os == 'Linux' or self.settings.os == 'Macos':
       self.cpp_info.includedirs.append('include/breakpad')
     self.env_info.path.append(os.path.join(self.package_folder, "bin"))
