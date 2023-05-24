@@ -1,5 +1,6 @@
-from conans import ConanFile, AutoToolsBuildEnvironment, MSBuild
+from conans import ConanFile, AutoToolsBuildEnvironment
 from conans import tools
+from conan.tools.microsoft import MSBuild, VCVars
 import os, shutil
 
 class BreakpadConan( ConanFile ):
@@ -12,6 +13,11 @@ class BreakpadConan( ConanFile ):
   generators = 'cmake'
   exports = ["FindBREAKPAD.cmake", "patch/*"]
   short_paths = True
+
+  def generate( self ):
+    if self.settings.os == 'Windows':
+      ms = VCVars(self)
+      ms.generate()
 
   def source( self ):
     breakpad_git = tools.Git(folder='breakpad')
@@ -53,11 +59,11 @@ class BreakpadConan( ConanFile ):
       os.environ['GYP_MSVS_VERSION'] = '2019'
       self.run('python breakpad/src/tools/gyp/gyp_main.py --no-circular-check -D win_release_RuntimeLibrary=2 -D win_debug_RuntimeLibrary=3 breakpad/src/client/windows/breakpad_client.gyp')
       msbuild = MSBuild(self)
-      msbuild.build('breakpad/src/client/windows/common.vcxproj', upgrade_project=False)
-      msbuild.build('breakpad/src/client/windows/handler/exception_handler.vcxproj', upgrade_project=False)
-      msbuild.build('breakpad/src/client/windows/crash_generation/crash_generation_client.vcxproj', upgrade_project=False)
-      msbuild.build('breakpad/src/client/windows/crash_generation/crash_generation_server.vcxproj', upgrade_project=False)
-      msbuild.build('breakpad/src/client/windows/sender/crash_report_sender.vcxproj', upgrade_project=False)
+      msbuild.build('breakpad/src/client/windows/common.vcxproj')
+      msbuild.build('breakpad/src/client/windows/handler/exception_handler.vcxproj')
+      msbuild.build('breakpad/src/client/windows/crash_generation/crash_generation_client.vcxproj')
+      msbuild.build('breakpad/src/client/windows/crash_generation/crash_generation_server.vcxproj')
+      msbuild.build('breakpad/src/client/windows/sender/crash_report_sender.vcxproj')
     elif self.settings.os == 'Linux':
       tools.patch(base_path='breakpad', patch_file='patch/std-max.patch', strip=1)
       env_build = AutoToolsBuildEnvironment(self)
